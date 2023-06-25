@@ -32,6 +32,7 @@ function LoginForm({ onLogin }) {
         }
         setLoginStatus('Error logging in');
       });
+	  
     } catch (error) {
       console.error(error);
     }
