@@ -10,7 +10,9 @@ function SendMessageForm({ onSendMessage }) {
 
   const handleSendMessage = async () => {
     try {
-      await axios.post(`https://localhost:7295/api/Chat/send-message?userId=${userId}&roomId=${roomId}&messageText=${messageText}`);
+      await  axios.post(`https://localhost:7295/api/Chat/send-message`,
+	  {roomId: roomId,
+	  messageText:messageText})
       setPostStatus('Message sent successfully');
       onSendMessage();  // After sending a message, retrieve all messages
     } catch (error) {
