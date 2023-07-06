@@ -11,32 +11,32 @@ function LoginForm({ onLogin }) {
 
   const handleLogin = async () => {
     try {
-		console.log(username, password)
-      axios.post(`https://localhost:7295/api/Login`, {
+      const response = await axios.post(`https://localhost:7295/api/Login`, {
         email: username,
         password: password,
-      })
-      .then((response) => {
-        onLogin(response.data);
-        setLoginStatus('');
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log('Error', error.message);
-        }
-        setLoginStatus('Error logging in');
       });
-	  
+
+      const userData = { 
+        Token: response.data.Token, 
+        Email: username // Čuvamo e-mail jer ga ne vraća server
+      };
+      onLogin(userData);
+      setLoginStatus('');
+
     } catch (error) {
-      console.error(error);
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+      setLoginStatus('Error logging in');
     }
-  };
+};
+
 
   return (
     <div className="container">

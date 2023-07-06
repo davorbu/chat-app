@@ -2,19 +2,25 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, TextField, Box } from '@mui/material';
 
-function SendMessageForm({ onSendMessage }) {
-  const [userId, setUserId] = useState('');
+function SendMessageForm({ onSendMessage, token }) {
   const [roomId, setRoomId] = useState('');
   const [messageText, setMessageText] = useState('');
   const [postStatus, setPostStatus] = useState('');
 
   const handleSendMessage = async () => {
     try {
-      await  axios.post(`https://localhost:7295/api/Chat/send-message`,
-	  {roomId: roomId,
-	  messageText:messageText})
+      await axios.post(`https://localhost:7295/api/Chat/send-message`,
+      {
+        roomId: roomId,
+        messageText:messageText
+      }, 
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       setPostStatus('Message sent successfully');
-      onSendMessage();  // After sending a message, retrieve all messages
+      onSendMessage();  
     } catch (error) {
       setPostStatus('Error sending message');
     }
@@ -23,15 +29,10 @@ function SendMessageForm({ onSendMessage }) {
   return (
     <Box sx={{ margin: '20px 0' }}>
       <h1>Send Message</h1>
-      <TextField label="User ID" value={userId} onChange={(e) => setUserId(e.target.value)} fullWidth />
-	  <br/>
-	  <br/>
       <TextField label="Room ID" value={roomId} onChange={(e) => setRoomId(e.target.value)} fullWidth />
-	  <br/>
-	  <br/>
+      <br/>
       <TextField label="Message Text" value={messageText} onChange={(e) => setMessageText(e.target.value)} fullWidth />
-	  <br/>
-	  <br/>
+      <br/>
       <Button variant="contained" onClick={handleSendMessage}>Send message</Button>
       <p>{postStatus}</p>
     </Box>

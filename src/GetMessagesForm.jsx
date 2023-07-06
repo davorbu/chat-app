@@ -2,20 +2,24 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, TextField, Box } from '@mui/material';
 
-function GetMessages({ onGetMessages }) {
+function GetMessagesForm({ onGetMessages, token }) { // Dodaj 'token' kao prop
   const [roomId, setRoomId] = useState('');
   const [getStatus, setGetStatus] = useState('');
 
   const handleGetMessages = async () => {
     try {
-      const response = await axios.get(`https://localhost:7295/api/Chat/get-messages?roomId=${roomId}`);
+      const response = await axios.get(`https://localhost:7295/api/Chat/get-messages?roomId=${roomId}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}` // koristimo 'token' koji smo prosledili
+        }
+      });
       onGetMessages(response.data);
       setGetStatus('');
     } catch (error) {
       setGetStatus('Error getting messages');
     }
   };
-
   return (
     <Box sx={{ margin: '20px 0' }}>
       <h1>Get Messages</h1>
@@ -28,4 +32,4 @@ function GetMessages({ onGetMessages }) {
   );
 }
 
-export default GetMessages;
+export default GetMessagesForm;

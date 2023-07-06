@@ -1,9 +1,11 @@
+// App.js
 import { useState, useEffect } from "react";
 import { Container } from "@mui/material";
 import SendMessageForm from "./SendMessageForm";
 import GetMessagesForm from "./GetMessagesForm";
 import MessageList from "./MessageList";
 import LoginForm from "./LoginForm";
+import axios from "axios";
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -24,18 +26,18 @@ function App() {
 
   const getMessages = async () => {
     try {
-      const response = await fetch("https://localhost:7295/api/Chat/get-messages?roomId=1", {
+      const response = await axios.get("https://localhost:7295/api/Chat/get-messages?roomId=1", {
         headers: {
           Authorization: `Bearer ${user?.Token}`,
         },
       });
-      const data = await response.json();
-      if (!data.error) {
-        setMessages(data);
+
+      if (response.status === 200) { // Dodano provjeravanje statusa odgovora
+        setMessages(response.data);
       }
     } catch (error) {
       console.error("An error occurred while getting the messages.", error);
-      if (error.status === 401) { 
+      if (error.response && error.response.status === 401) { // Izmenjen način provere statusa greške
         setUser(null);
         localStorage.removeItem('user');
       }
